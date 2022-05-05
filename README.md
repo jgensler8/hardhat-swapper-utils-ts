@@ -1,37 +1,74 @@
-# Hardhat TypeScript plugin boilerplate
-
-This is a sample Hardhat plugin written in TypeScript. Creating a Hardhat plugin
-can be as easy as extracting a part of your config into a different file and
-publishing it to npm.
-
-This sample project contains an example on how to do that, but also comes with
-many more features:
-
-- A mocha test suite ready to use
-- TravisCI already setup
-- A package.json with scripts and publishing info
-- Examples on how to do different things
+# hardhat-swapper-util-ts
 
 ## Installation
 
-To start working on your project, just run
+1. `npm install --save-dev @jgensler8_2/hardhat-swapper-util-ts
+2. `npx hardhat run install-deps`
+3. update your hardhat config:
 
-```bash
-npm install
+```
+// file: hardhat.config.js
+
+// 3.1 import 
+const swapper_utils = require('@jgensler8_2/hardhat-swapper-utils-ts');
+
+{
+// 3.2: uniswap depends on older version of compilers, use ones exposed by this package
+  solidity: {
+    compilers: [
+      ...swapper_utils.compilers
+    ],
+  },
+// 3.3: recompiling uniswap leads to larger bytecode
+  networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true,
+    }
+  },
+}
 ```
 
-## Plugin development
+4. Access Swapper utils via HRE:
 
-Make sure to read our [Plugin Development Guide](https://hardhat.org/advanced/building-plugins.html) to learn how to build a plugin.
+```
+// file: your-script.js
+
+const hre = require("hardhat");
+
+async function main() {
+    let su = hre.su
+    let state = su.defaultState()
+    state = await su.autoDeployUniswapV2Factory(state)
+    state = await su.autoDeployTokens(state)
+    state = await su.autoDeployUniswapV2Pairs(state)
+    state = await su.autoDeployUniswapV2Router(state)
+    state = await su.autoDripAndInitializePools(state)
+
+    const amountAIn = 10000
+    const tokenA = state.tokens["TOKA"]
+    const tokenB = state.tokens["TOKB"]
+    let amounts = await state.uniswapV2Router02.getAmountsOut(amountAIn, [tokenA.address, tokenB.address])
+
+    console.log(`amounts: ${amounts}`)
+}
+
+main()
+    .then(() => process.exit(0))
+    .catch(error => {
+        console.error(error);
+        process.exit(1);
+    });
+```
+
+```
+npx hardhat run your-script.js
+```
 
 ## Testing
 
 Running `npm run test` will run every test located in the `test/` folder. They
 use [mocha](https://mochajs.org) and [chai](https://www.chaijs.com/),
 but you can customize them.
-
-We recommend creating unit tests for your own modules, and integration tests for
-the interaction of the plugin with Hardhat and its dependencies.
 
 ## Linting and autoformat
 
@@ -45,14 +82,3 @@ it with `npm run lint:fix`.
 
 Just run `npm run build` ️👷
 
-## README file
-
-This README describes this boilerplate project, but won't be very useful to your
-plugin users.
-
-Take a look at `README-TEMPLATE.md` for an example of what a Hardhat plugin's
-README should look like.
-
-## Migrating from Buidler?
-
-Take a look at [the migration guide](MIGRATION.md)!
