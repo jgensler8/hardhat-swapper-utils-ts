@@ -1,12 +1,14 @@
-import { extendConfig, extendEnvironment } from "hardhat/config";
+import { extendConfig, extendEnvironment, task, subtask } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
 import path from "path";
+import { copyFileSync } from 'fs';
 
 import { EthersHardhatRuntimeEnvironment, SwapperUtils } from "./SwapperUtils";
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
 import "./type-extensions";
+import { mkdirp } from "fs-extra";
 
 extendConfig(
   (config: HardhatConfig, userConfig: Readonly<HardhatUserConfig>) => {
@@ -42,8 +44,39 @@ extendConfig(
 );
 
 extendEnvironment((hre) => {
+  console.log("extending hre")
   // We add a field to the Hardhat Runtime Environment here.
   // We use lazyObject to avoid initializing things until they are actually
   // needed.
-  hre.su = lazyObject(() => new SwapperUtils((hre as EthersHardhatRuntimeEnvironment), {faucetToken: "FaucetToken"}));
+  // hre.su = lazyObject(() => new SwapperUtils((hre as EthersHardhatRuntimeEnvironment), {faucetToken: "FaucetToken"}));
+  hre.su = new SwapperUtils((hre as EthersHardhatRuntimeEnvironment), {faucetToken: "FaucetToken"});
 });
+
+task("install-deps", "", async function(args, hre) {
+  console.log("get source paths")
+  const destDir = `${hre.config.paths.sources}/deps/@jgensler8_2/hardhat-swapper-utils-ts/`
+  await mkdirp(destDir)
+  for(let contract of ["FaucetToken.sol", "UniswapImports_0_5_16.sol", "UniswapImports_0_6_6.sol"]) {
+    copyFileSync(`${__dirname}/../../contracts/${contract}`, `${destDir}/${contract}`)
+  }
+})
+
+export const compilers = [
+  {
+    version: "0.8.4"
+  },
+  {
+    version: "0.6.6",
+    optimizer: {
+      enabled: true,
+      runs: 1000,
+    },
+  },
+  {
+    version: "0.5.16",
+    optimizer: {
+      enabled: true,
+      runs: 1000,
+    },
+  },
+]

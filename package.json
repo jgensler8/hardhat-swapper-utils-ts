@@ -22,17 +22,21 @@
     "prepublishOnly": "npm run build"
   },
   "files": [
+    "contracts/",
     "dist/src/",
     "src/",
     "LICENSE",
     "README.md"
   ],
   "devDependencies": {
+    "@jgensler8_2/v2-periphery-util": "^1.1.0-beta.2",
     "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@openzeppelin/contracts": "^4.6.0",
     "@types/chai": "^4.1.7",
     "@types/fs-extra": "^5.0.4",
     "@types/mocha": "^5.2.6",
     "@types/node": "^8.10.38",
+    "@uniswap/v2-core": "^1.0.1",
     "chai": "^4.2.0",
     "ethers": "^5.0.0",
     "hardhat": "^2.0.0",
@@ -46,6 +50,9 @@
   },
   "peerDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@uniswap/v2-core": "^1.0.1",
+    "@jgensler8_2/v2-periphery-util": "^1.1.0-beta.2",
     "hardhat": "^2.0.0"
   }
 }

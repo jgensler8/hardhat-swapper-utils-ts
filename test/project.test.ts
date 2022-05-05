@@ -2,7 +2,7 @@
 import { assert } from "chai";
 import path from "path";
 
-import { SwapperUtils } from "./SwapperUtils";
+import { EthersHardhatRuntimeEnvironment, SwapperUtils } from "../src/SwapperUtils";
 
 import { useEnvironment } from "./helpers";
 
@@ -34,13 +34,14 @@ describe("Integration tests examples", function () {
   });
 });
 
-// describe("Unit tests examples", function () {
-//   describe("ExampleHardhatRuntimeEnvironmentField", function () {
-//     describe("sayHello", function () {
-//       it("Should say hello", function () {
-//         const field = new SwapperUtils();
-//         assert.equal(field.sayHello(), "hello");
-//       });
-//     });
-//   });
-// });
+describe("Unit tests examples", function () {
+  describe("ExampleHardhatRuntimeEnvironmentField", function () {
+    describe("sayHello", function () {
+      it("Should say hello", function () {
+        useEnvironment("hardhat-project");
+        const field = new SwapperUtils((this.hre as EthersHardhatRuntimeEnvironment), {faucetToken: "test"});
+        assert.equal(field.sayHello(), "hello");
+      });
+    });
+  });
+});

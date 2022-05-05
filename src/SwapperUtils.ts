@@ -11,7 +11,7 @@ export type Tokens = {
 
 export type State = {
   names: Names,
-  tokenSymbolList: Array<string>,
+  tokenSymbolList: string[],
   tokens: Tokens,
 }
 
@@ -49,7 +49,7 @@ export class SwapperUtils {
     }
   }
 
-  public async deployTokens(tokenSymbolList: Array<string>): Promise<Tokens> {
+  public async deployTokens(tokenSymbolList: string[]): Promise<Tokens> {
     const FakeTokenFactory = await this.hre.ethers.getContractFactory(this.names.faucetToken)
     let tokens: Tokens = {}
     for (let tokenSymbol of tokenSymbolList) {
