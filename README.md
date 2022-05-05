@@ -1,11 +1,15 @@
 # hardhat-swapper-util-ts
 
+recompiles various UniswapV2 contracts.
+
+Note: this differs from the existing [hardhat-plugin-deploy-v3](https://github.com/Uniswap/hardhat-plugin-deploy-v3) in that it completely recompiles the Uniswap V2 contracts. As the Uniswap periphery library [depends on a hash of the V2Pair contract](https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol#L24), I have also build a package to compensate for the hardcoded hash ([link](https://github.com/jgensler8/v2-periphery-util)).
+
 ## Installation
 
 1. Install: `npm install --save-dev @jgensler8_2/hardhat-swapper-util-ts` .
   * Note: this has several common peer dependencies and might cause errors if you already have those as devDependencies.
 2. Install contract dependencies: `npx hardhat run install-deps` .
-  * Note: rather than overriding hardhats internal build chain, hardhad-swapper-utils-ts installs contracts to allow native `import` to build the correct dependency tree.
+  * Note: rather than [overriding hardhats internal build chain](https://github.com/NomicFoundation/hardhat/blob/master/packages/hardhat-core/src/builtin-tasks/compile.ts), hardhad-swapper-utils-ts installs contracts to allow native `import` to build the correct dependency tree.
 3. Update your hardhat config:
 
 ```javascript
