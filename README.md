@@ -2,11 +2,13 @@
 
 ## Installation
 
-1. `npm install --save-dev @jgensler8_2/hardhat-swapper-util-ts
-2. `npx hardhat run install-deps`
-3. update your hardhat config:
+1. Install: `npm install --save-dev @jgensler8_2/hardhat-swapper-util-ts` .
+  * Note: this has several common peer dependencies and might cause errors if you already have those as devDependencies.
+2. Install contract dependencies: `npx hardhat run install-deps` .
+  * Note: rather than overriding hardhats internal build chain, hardhad-swapper-utils-ts installs contracts to allow native `import` to build the correct dependency tree.
+3. Update your hardhat config:
 
-```
+```javascript
 // file: hardhat.config.js
 
 // 3.1 import 
@@ -30,7 +32,7 @@ const swapper_utils = require('@jgensler8_2/hardhat-swapper-utils-ts');
 
 4. Access Swapper utils via HRE:
 
-```
+```javascript
 // file: your-script.js
 
 const hre = require("hardhat");
@@ -60,8 +62,11 @@ main()
     });
 ```
 
+5. Finally, run your script:
+
 ```
-npx hardhat run your-script.js
+$ npx hardhat run your-script.js
+amounts: 10000,906
 ```
 
 ## Testing
