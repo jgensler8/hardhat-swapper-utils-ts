@@ -89,6 +89,18 @@ describe("Integration tests examples", function () {
         `${secondAmountB.toString()} > ${firstAmountB.toString()} failed`
       );
     });
+
+    it("should create a token list", async function() {
+      await this.hre.run("install-deps", { sourcePathRelativeModifier: ".." });
+      await this.hre.run("compile");
+
+      const su = this.hre.su;
+      let state = su.defaultState();
+      state = await su.autoDeployTokens(state);
+      let tokenList = await su.autoTokenList(state)
+
+      assert.lengthOf(tokenList.tokens, state.tokenSymbolList.length)
+    })
   });
 
   describe("HardhatConfig extension", function () {

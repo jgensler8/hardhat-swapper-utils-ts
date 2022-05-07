@@ -49,6 +49,19 @@ export interface EthersHardhatRuntimeEnvironment
   ethers: ExtendedHardhatEthersHelper;
 }
 
+export interface TokenListItem {
+  chainId: number
+  address: string
+  symbol: string
+  name: string
+  decimals: number
+}
+
+export interface TokenList {
+  name: string
+  tokens: TokenListItem[]
+}
+
 export class SwapperUtils {
   public static defaultState(): State {
     return {
@@ -301,5 +314,26 @@ export class SwapperUtils {
   public async deployAdditionalPool(firstState: State, secondState: State) {
     secondState.tokens = firstState.tokens;
     return this.deployAll(secondState, false);
+  }
+
+  public async tokenList(tokens: Tokens, chainId: number): Promise<TokenList> {
+    let tokenItems: TokenListItem[] = []
+    for(let token of Object.values(tokens)) {
+      tokenItems.push({
+        chainId: chainId,
+        name: (await token.name() as string),
+        symbol: (await token.symbol() as string),
+        decimals: (await token.decimals() as number),
+        address: (token.address as string),
+      })
+    }
+    return {
+      name: "hardhat",
+      tokens: tokenItems
+    }
+  }
+
+  public async autoTokenList(state: State): Promise<TokenList> {
+    return this.tokenList(state.tokens, 1337)
   }
 }
