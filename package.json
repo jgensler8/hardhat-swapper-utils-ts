@@ -1,6 +1,6 @@
 {
   "name": "@jgensler8_2/hardhat-swapper-utils-ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Hardhat TypeScript plugin boilerplate",
   "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",
   "author": "Nomic Labs LLC",
