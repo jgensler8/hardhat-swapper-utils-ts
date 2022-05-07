@@ -34,7 +34,7 @@ describe("Integration tests examples", function () {
       const amountB = amounts[1];
       // console.log(amountB)
       assert.equal(amountA.toString(), `${amountAIn}`);
-      assert.equal(amountB.toString(), "19999999799");
+      assert.equal(amountB.toString(), "1993801218018563549");
     });
 
     it("Should work with auto functions", async function () {
@@ -55,7 +55,7 @@ describe("Integration tests examples", function () {
       const amountA = amounts[0];
       const amountB = amounts[1];
       assert.equal(amountA.toString(), `${amountAIn}`);
-      assert.equal(amountB.toString(), "19999999799");
+      assert.equal(amountB.toString(), "1993801218018563549");
     });
 
     it("Should work with a second pool and result in price improvement from more liquidity", async function () {
@@ -101,6 +101,11 @@ describe("Integration tests examples", function () {
       let tokenList = await su.autoTokenList(state)
 
       assert.lengthOf(tokenList.tokens, state.tokenSymbolList.length)
+    })
+
+    it("should exponentiate", async function() {
+      let amount = this.hre.su.humanTokenAmount(1.0, 20).toString()
+      assert.equal(amount, "100000000000000000000")
     })
   });
 

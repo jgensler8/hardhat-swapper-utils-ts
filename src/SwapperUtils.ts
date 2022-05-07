@@ -216,7 +216,7 @@ export class SwapperUtils {
     uniswapDeadlineSeconds: number
   ) {
     const ten: BigNumber = this.hre.ethers.BigNumber.from(10)
-    const baseExponentiated = ten.pow(10);
+    const baseExponentiated = ten.pow(poolInitializer.ratioDecimals);
     const quote = baseExponentiated.mul(poolInitializer.midpointRatio);
 
     // scale both sides
