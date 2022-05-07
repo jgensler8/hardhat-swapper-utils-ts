@@ -44,11 +44,16 @@ const hre = require("hardhat");
 async function main() {
     let su = hre.su
     let state = su.defaultState()
-    state = await su.autoDeployUniswapV2Factory(state)
+    // deploy all at once
+    state = await su.autoDeployAll(state)
+    /*
+    // or deploy manually
     state = await su.autoDeployTokens(state)
+    state = await su.autoDeployUniswapV2Factory(state)
     state = await su.autoDeployUniswapV2Pairs(state)
     state = await su.autoDeployUniswapV2Router(state)
     state = await su.autoDripAndInitializePools(state)
+    */
 
     const amountAIn = 10000
     const tokenA = state.tokens["TOKA"]

@@ -4,6 +4,7 @@
 import { SolcUserConfig } from "hardhat/types";
 import "hardhat/types/config";
 import "hardhat/types/runtime";
+
 import { SwapperUtils } from "./SwapperUtils";
 
 declare module "hardhat/types/config" {
@@ -29,7 +30,7 @@ declare module "hardhat/types/runtime" {
   // This is an example of an extension to the Hardhat Runtime Environment.
   // This new field will be available in tasks' actions, scripts, and tests.
   export interface HardhatRuntimeEnvironment {
-    su: SwapperUtils
-    compilers: any[]
+    su: SwapperUtils;
+    compilers: any[];
   }
 }

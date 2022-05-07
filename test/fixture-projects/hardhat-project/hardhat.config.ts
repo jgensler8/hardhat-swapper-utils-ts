@@ -1,15 +1,13 @@
 // We load the plugin here.
 import { HardhatUserConfig } from "hardhat/types";
-import "../../../src/index";
-import { compilers } from '../../../src/index';
 
-require('@nomiclabs/hardhat-ethers')
+import { compilers } from "../../../src/index";
+
+require("@nomiclabs/hardhat-ethers");
 
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [
-      ...compilers
-    ],
+    compilers: [...compilers],
   },
   defaultNetwork: "hardhat",
   paths: {
@@ -18,7 +16,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       allowUnlimitedContractSize: true,
-    }
+    },
   },
 };
 
