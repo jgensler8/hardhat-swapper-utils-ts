@@ -1,4 +1,5 @@
 import { HardhatEthersHelpers } from "@nomiclabs/hardhat-ethers/types";
+import { BigNumber } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 export interface Names {
@@ -42,6 +43,7 @@ export interface State {
 export interface ExtendedHardhatEthersHelper extends HardhatEthersHelpers {
   constants: any;
   utils: any;
+  BigNumber: any;
 }
 
 export interface EthersHardhatRuntimeEnvironment
@@ -78,7 +80,7 @@ export class SwapperUtils {
       uniswapDeadlineSeconds: 60,
       poolInitializer: {
         midpointRatio: 2.0,
-        ratioDecimals: 8,
+        ratioDecimals: 22,
         ratioMultiplier: 1.0,
       },
     };
@@ -213,16 +215,17 @@ export class SwapperUtils {
     poolInitializer: PoolInitializer,
     uniswapDeadlineSeconds: number
   ) {
-    const baseExponentiated = Math.pow(10, poolInitializer.ratioDecimals);
-    const quote = baseExponentiated * poolInitializer.midpointRatio;
+    const ten: BigNumber = this.hre.ethers.BigNumber.from(10)
+    const baseExponentiated = ten.pow(10);
+    const quote = baseExponentiated.mul(poolInitializer.midpointRatio);
 
     // scale both sides
-    const baseMultiplied = baseExponentiated * poolInitializer.ratioMultiplier;
-    const quoteMultiplied = quote * poolInitializer.ratioMultiplier;
+    const baseMultiplied = baseExponentiated.mul(poolInitializer.ratioMultiplier);
+    const quoteMultiplied = quote.mul(poolInitializer.ratioMultiplier);
 
     // console.log("dripping tokens")
-    await tokenA.drip(initializeAccount.address, baseMultiplied * 2);
-    await tokenB.drip(initializeAccount.address, quoteMultiplied * 2);
+    await tokenA.drip(initializeAccount.address, baseMultiplied.mul(2));
+    await tokenB.drip(initializeAccount.address, quoteMultiplied.mul(2));
     await tokenA
       .connect(initializeAccount)
       .approve(uniswapV2Router02.address, this.hre.ethers.constants.MaxUint256);
@@ -335,5 +338,14 @@ export class SwapperUtils {
 
   public async autoTokenList(state: State): Promise<TokenList> {
     return this.tokenList(state.tokens, 1337)
+  }
+
+  public static humanTokenAmount(ethers: any, amount: number, decimals: number): BigNumber {
+    let places: BigNumber = ethers.BigNumber.from(10).pow(ethers.BigNumber.from(decimals))
+    return ethers.BigNumber.from(amount).mul(places)
+  }
+
+  public humanTokenAmount(amount: number, decimals: number): BigNumber {
+    return SwapperUtils.humanTokenAmount(this.hre.ethers, amount, decimals)
   }
 }

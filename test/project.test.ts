@@ -1,8 +1,9 @@
 // tslint:disable-next-line no-implicit-dependencies
 import { assert } from "chai";
+import { BigNumber } from "ethers";
 import path from "path";
 
-import { SwapperUtils } from "../src/SwapperUtils";
+import { EthersHardhatRuntimeEnvironment, SwapperUtils } from "../src/SwapperUtils";
 
 import { useEnvironment } from "./helpers";
 
@@ -22,7 +23,7 @@ describe("Integration tests examples", function () {
       state = await su.autoDeployUniswapV2Router(state);
       state = await su.autoDripAndInitializePools(state);
 
-      const amountAIn = 10000;
+      const amountAIn = su.humanTokenAmount(1, 18);
       const tokenA = state.tokens.TOKA;
       const tokenB = state.tokens.TOKB;
       const amounts = await state.uniswapV2Router02.getAmountsOut(amountAIn, [
@@ -33,7 +34,7 @@ describe("Integration tests examples", function () {
       const amountB = amounts[1];
       // console.log(amountB)
       assert.equal(amountA.toString(), `${amountAIn}`);
-      assert.equal(amountB.toString(), "19938");
+      assert.equal(amountB.toString(), "19999999799");
     });
 
     it("Should work with auto functions", async function () {
@@ -44,7 +45,7 @@ describe("Integration tests examples", function () {
       let state = su.defaultState();
       state = await su.autoDeployAll(state);
 
-      const amountAIn = 10000;
+      const amountAIn = su.humanTokenAmount(1, 18);
       const tokenA = state.tokens.TOKA;
       const tokenB = state.tokens.TOKB;
       const amounts = await state.uniswapV2Router02.getAmountsOut(amountAIn, [
@@ -54,7 +55,7 @@ describe("Integration tests examples", function () {
       const amountA = amounts[0];
       const amountB = amounts[1];
       assert.equal(amountA.toString(), `${amountAIn}`);
-      assert.equal(amountB.toString(), "19938");
+      assert.equal(amountB.toString(), "19999999799");
     });
 
     it("Should work with a second pool and result in price improvement from more liquidity", async function () {
@@ -69,7 +70,7 @@ describe("Integration tests examples", function () {
       secondState.poolInitializer.ratioMultiplier = 2.0;
       secondState = await su.deployAdditionalPool(state, secondState);
 
-      const amountAIn = 10000;
+      const amountAIn = su.humanTokenAmount(1, 18);
       const tokenA = state.tokens.TOKA;
       const tokenB = state.tokens.TOKB;
       // first pool
